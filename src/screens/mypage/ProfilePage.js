@@ -5,9 +5,9 @@ import Header from '../../components/Header';
 import BackButton from '../../components/BackButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import goldMedal from '../../assets/gold-medal.png'
-import silverMedal from '../../assets/silver-medal.png';
-import bronzeMedal from '../../assets/bronze-medal.png';
+import goldlevel from '../../assets/gold-level.png';
+import silverlevel from '../../assets/silver-level.png';
+import greenlevel from '../../assets/green-level.png';
 
 const { width } = Dimensions.get('window');
 
@@ -29,7 +29,7 @@ export default function ProfilePage() {
                     name: data.name,
                     email: data.email,
                     address: data.address,
-                    grade:   data.grade
+                    grade: data.grade,
                 });
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -39,14 +39,14 @@ export default function ProfilePage() {
         fetchUserInfo();
     }, []);
 
-    const renderMedal = (grade) => {
+    const renderlevel = (grade) => {
         switch (grade) {
-            case 'gold':
-                return <Image source={goldMedal} style={styles.medal} />;
-            case 'silver':
-                return <Image source={silverMedal} style={styles.medal} />;
-            case 'bronze':
-                return <Image source={bronzeMedal} style={styles.medal} />;
+            case 'GOLD':
+                return <Image source={goldlevel} style={styles.level} />;
+            case 'SILVER':
+                return <Image source={silverlevel} style={styles.level} />;
+            case 'GREEN':
+                return <Image source={greenlevel} style={styles.level} />;
             default:
                 return null;
         }
@@ -58,8 +58,8 @@ export default function ProfilePage() {
             <BackButton goBack={() => navigation.navigate('Dashboard')} />
           </View>
           <Header>회원 정보</Header>
-            <View style={styles.medalContainer}>
-                {renderMedal(userInfo.grade)}
+            <View style={styles.levelContainer}>
+                {renderlevel(userInfo.grade)}
             </View>
             <InfoItem label="이름" value={userInfo.name} />
             <InfoItem label="이메일" value={userInfo.email} />
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     value: {
         fontSize: 16,
     },
-    medalContainer: {
+    levelContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 8,
