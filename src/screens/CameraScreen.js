@@ -49,7 +49,12 @@ export default function CameraScreen({ navigation }) {
           console.log(data.message); // 서버에서 온 데이터 확인
           if (data.message === "성공") {
             // 성공적인 응답 처리
-            Alert.alert(`성공!현재 잔액: ${data.mileage}점`);
+            Alert.alert(
+              '성공!',
+              `현재 등급: ${data.grade}\n적립 마일리지: ${data.point}\n현재 잔액: ${data.mileage}점`,
+            );
+            
+            
             
             navigation.goBack();
           } else {

@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, Dimensions , Image} from 'react-native';
 import Background from '../../components/Background';
 import Header from '../../components/Header';
 import BackButton from '../../components/BackButton';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import goldMedal from '../../assets/gold-medal.png'
+import silverMedal from '../../assets/silver-medal.png';
+import bronzeMedal from '../../assets/bronze-medal.png';
 
 const { width } = Dimensions.get('window');
 
 export default function ProfilePage() {
     const navigation = useNavigation();
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-    const [userInfo, setUserInfo] = useState({ name: '', email: '', address: '' });
+    const [userInfo, setUserInfo] = useState({ name: '', email: '', address: '', grade: '' });
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -25,7 +28,8 @@ export default function ProfilePage() {
                 setUserInfo({
                     name: data.name,
                     email: data.email,
-                    address: data.address
+                    address: data.address,
+                    grade:   data.grade
                 });
             } catch (error) {
                 console.error('Error fetching user data:', error);
@@ -35,15 +39,31 @@ export default function ProfilePage() {
         fetchUserInfo();
     }, []);
 
+    const renderMedal = (grade) => {
+        switch (grade) {
+            case 'gold':
+                return <Image source={goldMedal} style={styles.medal} />;
+            case 'silver':
+                return <Image source={silverMedal} style={styles.medal} />;
+            case 'bronze':
+                return <Image source={bronzeMedal} style={styles.medal} />;
+            default:
+                return null;
+        }
+    };
+
     return (
         <Background>
           <View style={{ position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
             <BackButton goBack={() => navigation.navigate('Dashboard')} />
           </View>
           <Header>회원 정보</Header>
-          <InfoItem label="이름" value={userInfo.name} />
-          <InfoItem label="이메일" value={userInfo.email} />
-          <InfoItem label="주소" value={userInfo.address} />
+            <View style={styles.medalContainer}>
+                {renderMedal(userInfo.grade)}
+            </View>
+            <InfoItem label="이름" value={userInfo.name} />
+            <InfoItem label="이메일" value={userInfo.email} />
+            <InfoItem label="주소" value={userInfo.address} />
         </Background>
     );
 }
@@ -78,4 +98,11 @@ const styles = StyleSheet.create({
     value: {
         fontSize: 16,
     },
+    medalContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 8,
+    marginTop: 20,
+    marginBottom: 20,
+},
 });
